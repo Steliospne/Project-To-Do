@@ -1,47 +1,102 @@
-import DOM from './domManipulation';
+import "./style.css";
+import DOM from "./domManipulation";
+import task from "./tasks";
+import project from "./projects";
 
+let data = {
+    tasks: {},
+    projects: {},
+};
 
-const testProjects2 = {
-    0:  {
-        name: 'test project 1',
-        description: 'test project 1 description'
-    },
+let taskCounter = 0;
+let projectCounter = 0;
 
-    1:  {
-        name: 'test project 2',
-        description: 'test project 2 description'
-    },
+const myDOM = new DOM();
 
-    2:  {
-        name: 'test project 3',
-        description: 'test project 3 description'
-    },
+const homeBtn = document.querySelector(".home-btn");
+const projectBtn = document.querySelector(".project-btn");
+const addBtn = document.querySelector(".add-btn");
+const dialog = document.querySelector("dialog");
+const cancelBtn = document.querySelector(".cancel");
+const createBtn = document.querySelector(".submit");
 
-    3:  {
-        name: 'test project 4',
-        description: 'test project 4 description'
-    },
+homeBtn.addEventListener("click", (e) => {
+    myDOM.setStatus(e);
+    myDOM.populateTasks(data.tasks);
+});
 
-    4:  {
-        name: 'test project 5',
-        description: 'test project 5 description'
-    },
+projectBtn.addEventListener("click", (e) => {
+    myDOM.setStatus(e);
+    myDOM.populateProjects(data);
+});
 
-    5:  {
-        name: 'test project 6',
-        description: 'test project 6 description'
-    },
+addBtn.addEventListener("click", () => {
+    dialog.showModal();
+    myDOM.createBtnShaper();
+});
 
-    6:  {
-        name: 'test project 7',
-        description: 'test project 7 description'
-    },
+cancelBtn.addEventListener("click", () => {
+    dialog.close();
+});
 
-    7:  {
-        name: 'test project 8',
-        description: 'test project 8 description'
+dialog.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape') {
+        createBtn.classList.remove('edit');
     }
-}
+})
 
-const myDOM = new DOM(); 
-myDOM.populateProjects(testProjects2);
+createBtn.addEventListener("click", (e) => {
+    
+
+    e.preventDefault();
+    if (
+        homeBtn.className.includes("active") &&
+        !createBtn.className.includes("edit")
+    ) {
+        const newTask = new task();
+        newTask.id = taskCounter;
+        taskCounter++;
+        data["tasks"][newTask.id] = myDOM.getInput(newTask);
+        dialog.close();
+        myDOM.populateTasks(data.tasks);
+    } else if (
+        createBtn.className.includes("edit") &&
+        homeBtn.className.includes("active")
+    ) {
+        data["tasks"][createBtn.value] = myDOM.getInput(
+            data["tasks"][createBtn.value]
+        );
+        createBtn.classList.remove("edit");
+        dialog.close();
+        myDOM.populateTasks(data.tasks);
+    } else if (createBtn.className.includes("edit")) {
+        data["projects"][createBtn.value] = myDOM.getInput(
+            data["projects"][createBtn.value]
+        );
+        createBtn.classList.remove("edit");
+        dialog.close();
+        myDOM.populateProjects(data.projects);
+    } else if (
+        projectBtn.className.includes("active") &&
+        !createBtn.className.includes("projTask")
+    ) {
+        const newProject = new project();
+        newProject.id = projectCounter;
+        projectCounter++;
+        data["projects"][newProject.id] = myDOM.getInput(newProject);
+        dialog.close();
+        myDOM.populateProjects(data);
+    } else if (createBtn.className.includes("projTask")) {
+        const newTask = new task();
+        newTask.id = taskCounter;
+        taskCounter++;
+        newTask.project_id = +createBtn.value;
+        data["tasks"][newTask.id] = myDOM.getInput(newTask);
+        createBtn.classList.remove("projTasks");
+        myDOM.inspectView(data)
+        // console.log(temp.filter((task)=> task.project_id == createBtn.value))
+        dialog.close();
+    }
+
+    console.log(data);
+});
