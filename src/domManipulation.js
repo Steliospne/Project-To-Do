@@ -56,6 +56,40 @@ export default class domManipulation {
         }
     }
 
+    populateProjectTasks(obj) {
+
+        for (let key in obj) {
+            const taskCard = document.createElement("div");
+            const name = document.createElement("p");
+            const description = document.createElement("p");
+            const deleteBtn = document.createElement("button");
+            const editBtn = document.createElement("button");
+
+            taskCard.classList.add("task-card");
+            name.classList.add("task-name");
+            description.classList.add("task-description");
+            deleteBtn.classList.add("deleteBtn");
+            editBtn.classList.add("editBtn");
+
+            name.textContent = obj[key].name;
+            description.textContent = obj[key].description;
+            taskCard.id = obj[key].id;
+            taskCard.append(name, description, editBtn, deleteBtn);
+            this.wrapper.append(taskCard);
+
+            editBtn.addEventListener("click", (e) => {
+                this.createBtn.classList.add("edit");
+                this.createBtn.value = e.target.parentElement.id;
+                this.dialog.showModal();
+            });
+
+            deleteBtn.addEventListener("click", (e) => {
+                this.wrapper.removeChild(e.target.parentElement);
+                delete obj[e.target.parentElement.id];
+            });
+        }
+    }
+
     populateProjects(obj) {
         this.screenUpdate();
 
