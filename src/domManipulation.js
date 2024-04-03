@@ -183,4 +183,22 @@ export default class domManipulation {
         return obj;
     }
 
+    setStatus(e) {
+        const target = e.target;
+        if (!target.className.includes("active")) {
+            this.homeBtn.className.includes("active") === true
+                ? this.homeBtn.classList.remove("active")
+                : this.homeBtn.classList.add("active");
+            this.projectBtn.className.includes("active") === true
+                ? this.projectBtn.classList.remove("active")
+                : this.projectBtn.classList.add("active");
+        } else if (
+            target.className.includes("editBtn") &&
+            !target.className.includes("active")
+        ) {
+            this.editBtn.className.includes("active") === true
+                ? this.editBtn.classList.remove("active")
+                : this.editBtn.classList.add("active");
+        }
+    }
 }
