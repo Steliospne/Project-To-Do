@@ -1,25 +1,25 @@
 export default class domManipulation {
     body = document.querySelector("body");
+    main = document.querySelector(".main");
+    wrapper = document.querySelector(".display");
 
-    populateProjects(obj) {
-        const projects = obj;
+    today = new Date().toISOString().split("T")[0];
+    datePicker = document
+        .querySelector("#date")
+        .setAttribute("min", this.today);
 
-        for (const index in projects) {
-            const wrapper = document.createElement("div");
-            const container = document.createElement("div");
+    dialog = document.querySelector("dialog");
+    homeBtn = document.querySelector(".home-btn");
+    projectBtn = document.querySelector(".project-btn");
+    createBtn = document.querySelector(".submit");
+
+
             const name = document.createElement("p");
             const description = document.createElement("p");
 
-            wrapper.classList.add("task-wrapper");
-            container.classList.add("task-container");
             name.classList.add("task-name");
             description.classList.add("task-description");
 
-            name.textContent = projects[index].name;
-            description.textContent = projects[index].description;
-            container.append(name, description);
-            wrapper.append(container);
-            this.body.append(wrapper);
         }
     }
 }
