@@ -141,4 +141,28 @@ export default class domManipulation {
         }
     }
 
+    inspectView(obj) {
+        this.screenUpdate();
+        const filtered = [];
+        const header = document.createElement("h1");
+        const backBtn = document.createElement("button");
+        for (let key in obj.tasks) {
+            filtered.push(obj.tasks[key]);
+        }
+
+        header.textContent = obj.projects[this.createBtn.value].name;
+        backBtn.textContent = "Back";
+        this.createBtn.classList.add("projTasks");
+
+        this.wrapper.append(header);
+        this.populateProjectTasks(filtered.filter((task => task.project_id == this.createBtn.value)));
+        this.wrapper.append(backBtn);
+
+        backBtn.addEventListener("click", () => {
+            this.screenUpdate();
+            this.createBtn.classList.remove("projTask");
+            this.populateProjects(obj);
+        });
+    }
+
 }
