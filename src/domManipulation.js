@@ -201,4 +201,8 @@ export default class domManipulation {
                 : this.editBtn.classList.add("active");
         }
     }
+
+    screenUpdate() {
+        this.wrapper.textContent = "";
+    }
 }
