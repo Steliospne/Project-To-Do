@@ -13,6 +13,14 @@ export default class domManipulation {
     projectBtn = document.querySelector(".project-btn");
     createBtn = document.querySelector(".submit");
 
+    createBtnShaper() {
+        if (this.homeBtn.className.includes("active")) {
+            this.createBtn.innerHTML = "add Task";
+        } else {
+            this.createBtn.innerHTML = "add Project";
+        }
+    }
+
 
             const name = document.createElement("p");
             const description = document.createElement("p");
