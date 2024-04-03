@@ -165,4 +165,22 @@ export default class domManipulation {
         });
     }
 
+    getInput(obj) {
+        const name = document.querySelector("#name").value;
+        const description = document.querySelector("#description").value;
+        const priority = Array.from(
+            document.getElementsByName("priority")
+        ).filter((radio) => {
+            return radio.checked == true;
+        })[0].id;
+        const dueDate = document.querySelector("#date").value;
+
+        obj.dueDate = dueDate;
+        obj.name = name;
+        obj.description = description;
+        obj.priority = priority;
+
+        return obj;
+    }
+
 }
