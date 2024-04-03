@@ -1,11 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>To Do</title>
+    </head>
+    <body>
+        <div class="main">
+            <header>
+                <div class="logo">To Do</div>
+                <button class="view">{placeholder}</button>
+                <button class="add-btn">+</button>
+            </header>
+            <nav class="nav-bar">
+                <button class="home-btn active" value="active">Home</button>
+                <button class="project-btn">Projects</button>
+            </nav>
+            <div class="display"></div>
+            <footer>powered by magic</footer>
+        </div>
+
+        <dialog>
+            <form action="" method="dialog">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" />
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                </div>
+                <div>
+                    <label for="date">Date:</label>
+                    <input type="date" name="date" id="date" />
+                </div>
+                <div>
+                    <label for="priority">Priority:</label>
+                    <div id="priority">
+                        <div>
+                            <label for="low">Low:</label>
+                            <input type="radio" name="priority" id="low" checked>
+                        </div>
+                        <div>
+                            <label for="medium">Medium:</label>
+                            <input type="radio" name="priority" id="medium">
+                        </div>
+                        <div>
+                            <label for="high">High:</label>
+                            <input type="radio" name="priority" id="high">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-btn">
+                    <button class="submit"></button>
+                    <button type="button" class="cancel">{placeholder}</button>
+                </div>
+            </form>
+        </dialog>
+    </body>
 </html>
