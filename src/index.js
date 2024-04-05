@@ -22,79 +22,83 @@ const createBtn = document.querySelector(".submit");
 
 homeBtn.addEventListener("click", (e) => {
     myDOM.setStatus(e);
+    myDOM.createBtnStateReset();
     myDOM.populateTasks(data.tasks);
 });
 
 projectBtn.addEventListener("click", (e) => {
     myDOM.setStatus(e);
+    myDOM.createBtnStateReset();
     myDOM.populateProjects(data);
 });
 
 addBtn.addEventListener("click", () => {
     dialog.showModal();
-    myDOM.createBtnShaper();
+    myDOM.createBtnState();
 });
 
 cancelBtn.addEventListener("click", () => {
+    myDOM.createBtnStateReset();
     dialog.close();
 });
 
-dialog.addEventListener('keydown', (e) => {
-    if (e.key == 'Escape') {
-        createBtn.classList.remove('edit');
+dialog.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+        myDOM.createBtnStateReset();
     }
-})
+});
 
 createBtn.addEventListener("click", (e) => {
-    
-
     e.preventDefault();
-    if (
-        homeBtn.className.includes("active") &&
-        !createBtn.className.includes("edit")
-    ) {
+    if (myDOM.createBtnState() == "home") {
         const newTask = new task();
         newTask.id = taskCounter;
         taskCounter++;
         data["tasks"][newTask.id] = myDOM.getInput(newTask);
+        myDOM.createBtnStateReset();
         dialog.close();
         myDOM.populateTasks(data.tasks);
-    } else if (
-        createBtn.className.includes("edit") &&
-        homeBtn.className.includes("active")
-    ) {
+    } else if (myDOM.createBtnState() == "editTask") {
         data["tasks"][createBtn.value] = myDOM.getInput(
             data["tasks"][createBtn.value]
         );
         createBtn.classList.remove("edit");
+        myDOM.createBtnStateReset();
         dialog.close();
         myDOM.populateTasks(data.tasks);
-    } else if (createBtn.className.includes("edit")) {
+    } else if (myDOM.createBtnState() == "editProject") {
         data["projects"][createBtn.value] = myDOM.getInput(
             data["projects"][createBtn.value]
         );
         createBtn.classList.remove("edit");
+        myDOM.createBtnStateReset();
         dialog.close();
-        myDOM.populateProjects(data.projects);
-    } else if (
-        projectBtn.className.includes("active") &&
-        !createBtn.className.includes("projTask")
-    ) {
+        myDOM.populateProjects(data);
+    } else if (myDOM.createBtnState() == 'editProjectTask') {
+        data["tasks"][createBtn.value] = myDOM.getInput(
+            data["tasks"][createBtn.value]
+        );
+        createBtn.classList.remove("edit");
+        myDOM.inspectView(data);
+        myDOM.createBtnStateReset();
+        dialog.close();
+    } else if (myDOM.createBtnState() == "project") {
         const newProject = new project();
         newProject.id = projectCounter;
         projectCounter++;
         data["projects"][newProject.id] = myDOM.getInput(newProject);
+        myDOM.createBtnStateReset();
         dialog.close();
         myDOM.populateProjects(data);
-    } else if (createBtn.className.includes("projTask")) {
+    } else if (myDOM.createBtnState() == "projectTask") {
         const newTask = new task();
         newTask.id = taskCounter;
         taskCounter++;
         newTask.project_id = +createBtn.value;
         data["tasks"][newTask.id] = myDOM.getInput(newTask);
         createBtn.classList.remove("projTasks");
-        myDOM.inspectView(data)
-        // console.log(temp.filter((task)=> task.project_id == createBtn.value))
+        myDOM.inspectView(data);
+        myDOM.createBtnStateReset();
         dialog.close();
     }
 
