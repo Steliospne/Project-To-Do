@@ -165,16 +165,16 @@ export default class domManipulation {
             });
 
             deleteBtn.addEventListener("click", (e) => {
-                delete obj.projects[e.target.parentElement.id];
                 for (let task in obj.tasks) {
                     if (
-                        obj.projects[e.target.parentElement.id] ==
-                        task.project_id
-                    ) {
-                        delete obj.tasks[task];
+                        obj.projects[e.target.parentElement.id].id ==
+                        obj.tasks[task].project_id
+                        ) {
+                            delete obj.tasks[task];
+                        }
                     }
-                }
-                this.wrapper.removeChild(e.target.parentElement);
+                    this.wrapper.removeChild(e.target.parentElement);
+                    delete obj.projects[e.target.parentElement.id];
             });
         }
     }
