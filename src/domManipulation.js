@@ -13,12 +13,40 @@ export default class domManipulation {
     projectBtn = document.querySelector(".project-btn");
     createBtn = document.querySelector(".submit");
 
-    createBtnShaper() {
-        if (this.homeBtn.className.includes("active")) {
-            this.createBtn.innerHTML = "add Task";
+    createBtnState() {
+        if (this.createBtn.className.includes("projTasks")) {
+            this.createBtn.textContent = "add Task";
+            return "projectTask";
+        } else if (this.createBtn.className.includes("editProjTasks")) {
+            this.createBtn.textContent = "edit Task";
+            return "editProjectTask";
+        } else if (
+            this.createBtn.className.includes("edit") &&
+            this.homeBtn.className.includes("active")
+        ) {
+            this.createBtn.textContent = "edit Task";
+            return "editTask";
+        } else if (
+            this.createBtn.className.includes("edit") &&
+            this.projectBtn.className.includes("active")
+        ) {
+            this.createBtn.textContent = "edit Project";
+            return "editProject";
+        } else if (this.homeBtn.className.includes("active")) {
+            this.createBtn.textContent = "add Task";
+            this.createBtn.classList.add("task");
+            return "home";
+        } else if (this.projectBtn.className.includes("active")) {
+            this.createBtn.textContent = "add Project";
+            this.createBtn.classList.add("project");
+            return "project";
         } else {
-            this.createBtn.innerHTML = "add Project";
+            this.createBtnStateReset();
+            return null;
         }
+    }
+    createBtnStateReset() {
+        this.createBtn.className = "submit";
     }
 
     populateTasks(obj) {
@@ -46,6 +74,7 @@ export default class domManipulation {
             editBtn.addEventListener("click", (e) => {
                 this.createBtn.classList.add("edit");
                 this.createBtn.value = e.target.parentElement.id;
+                this.createBtnState();
                 this.dialog.showModal();
             });
 
@@ -57,7 +86,6 @@ export default class domManipulation {
     }
 
     populateProjectTasks(obj) {
-
         for (let key in obj) {
             const taskCard = document.createElement("div");
             const name = document.createElement("p");
@@ -78,8 +106,9 @@ export default class domManipulation {
             this.wrapper.append(taskCard);
 
             editBtn.addEventListener("click", (e) => {
-                this.createBtn.classList.add("edit");
+                this.createBtn.classList.add("editProjTasks");
                 this.createBtn.value = e.target.parentElement.id;
+                this.createBtnState();
                 this.dialog.showModal();
             });
 
@@ -131,12 +160,21 @@ export default class domManipulation {
             editBtn.addEventListener("click", (e) => {
                 this.createBtn.classList.add("edit");
                 this.createBtn.value = e.target.parentElement.id;
+                this.createBtnState();
                 this.dialog.showModal();
             });
 
             deleteBtn.addEventListener("click", (e) => {
+                delete obj.projects[e.target.parentElement.id];
+                for (let task in obj.tasks) {
+                    if (
+                        obj.projects[e.target.parentElement.id] ==
+                        task.project_id
+                    ) {
+                        delete obj.tasks[task];
+                    }
+                }
                 this.wrapper.removeChild(e.target.parentElement);
-                delete obj[e.target.parentElement.id];
             });
         }
     }
@@ -155,12 +193,14 @@ export default class domManipulation {
         this.createBtn.classList.add("projTasks");
 
         this.wrapper.append(header);
-        this.populateProjectTasks(filtered.filter((task => task.project_id == this.createBtn.value)));
+        this.populateProjectTasks(
+            filtered.filter((task) => task.project_id == this.createBtn.value)
+        );
         this.wrapper.append(backBtn);
 
         backBtn.addEventListener("click", () => {
             this.screenUpdate();
-            this.createBtn.classList.remove("projTask");
+            this.createBtnStateReset();
             this.populateProjects(obj);
         });
     }
