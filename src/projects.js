@@ -6,5 +6,6 @@ export default class Projects {
         this.priority = priority;
         this.id = id;
         this.completed = false;
+        this.animation = false;
     }
 }

@@ -7,5 +7,6 @@ export default class Tasks {
         this.id = id;
         this.project_id = project_id;
         this.completed = false;
+        this.animation = false;
     }
 }
