@@ -1,6 +1,12 @@
+@font-face {
+    font-family: 'Overlock';
+    src: url(/src/assets/fonts/Overlock-Regular.ttf);
+}
+
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Overlock';
 }
 
 body {
@@ -11,24 +17,27 @@ body {
     height: 100%;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 
-    "header header"
-    "nav-bar display"
-    "footer footer";
+    grid-template-columns: 150px 1fr;
+    grid-template-areas:
+        "nav-bar header"
+        "nav-bar display"
+        "nav-bar footer";
 }
 
 header {
+    position: relative;
     grid-area: header;
     display: flex;
-    background: lightblue;
+    background: #f7c566;
 }
 
 .nav-bar {
     grid-area: nav-bar;
     display: flex;
     flex-direction: column;
-    background-color: rgb(147, 179, 240);
+    background-color: #dc6b19;
+    z-index: 1;
+    gap: 10px
 }
 
 .display {
@@ -40,58 +49,108 @@ header {
 footer {
     grid-area: footer;
     height: 75px;
-    background: lightblue;
+    background: #f7c566;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .logo {
-    flex:1
+    flex: 1;
 }
 
-.view,
-.add-btn {
-    height: 75px;
-    width: 100px;
-    margin: 10px;
-
+i.add-btn-icon {
+    background-image: url("./assets/images/plus-circle.svg");
 }
 
+i.home-btn-icon {
+    background-image: url("./assets/images/home.svg");
+    margin-right: 5px;
+    margin-top: 5vh;
+}
+
+i.project-btn-icon {
+    background-image: url("./assets/images/coffee.svg");
+    margin-right: 5px;
+}
+
+.inspectBtn,
+.editBtn,
+.deleteBtn,
+i.add-btn-icon,
+i.home-btn-icon,
+i.project-btn-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    filter: invert(91%) sepia(21%) saturate(496%) hue-rotate(319deg)
+        brightness(107%) contrast(105%);
+}
+
+.inspectBtn:hover,
+.editBtn:hover,
+.deleteBtn:hover,
+i.add-btn-icon:hover,
+.home-btn.active > i,
+.project-btn.active > i {
+    filter: invert(8%) sepia(97%) saturate(5240%) hue-rotate(314deg)
+        brightness(65%) contrast(99%);
+}
+
+.add-btn,
 .home-btn,
 .project-btn {
-    height: 75px;
-    width: 100px;
-    margin: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    border: none;
+    background: unset;
+    color: #fff8dc;
+    padding: 10px;
+    font-weight: 700;
 }
 
-.home-btn.active {
-    background-color: lightgreen;
-}   
+.add-btn {
+    align-items: center;
+}
 
+.home-btn.active,
 .project-btn.active {
-    background-color: lightgreen;
+    color: #6c0345;
+    scale: 1.2;
 }
 
 .task-card,
 .project-card {
     margin: 5px;
     padding: 10px;
-    background-color: rgb(147, 179, 240);
+    background-color: #dc6b19;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
+    color: #fff8dc;
+    font-size: 1.2rem;
+    gap: 10px;
+}
+
+.task-card.animation,
+.project-card.animation {
+    position: relative;
+    animation: slidein 1s ease-in-out;
 }
 
 .inspectBtn {
-    background-image: url('./assets/images/eye.svg');
+    background-image: url("./assets/images/eye.svg");
 }
 
 .editBtn {
-    background-image: url('./assets/images/edit-2.svg');
+    background-image: url("./assets/images/edit-2.svg");
 }
 
 .deleteBtn {
-    background-image: url('./assets/images/trash-2.svg');
+    background-image: url("./assets/images/trash-2.svg");
 }
-
 
 .inspectBtn,
 .deleteBtn,
@@ -109,4 +168,13 @@ dialog {
     width: 500px;
     top: calc(50vh - 175px);
     left: calc(50vw - 250px);
+}
+
+@keyframes slidein {
+    0% {
+        left: -1000px;
+    }
+    100% {
+        left: 0;
+    }
 }
