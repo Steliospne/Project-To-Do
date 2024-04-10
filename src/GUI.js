@@ -1,6 +1,8 @@
 import task from "./tasks.js";
 import project from "./projects.js";
 import Storage from "./Storage.js";
+import { format } from "date-fns";
+import Tasks from "./tasks.js";
 
 export default class GUI {
     static wrapper = document.querySelector(".display");
@@ -143,31 +145,31 @@ export default class GUI {
 
         console.log(tasks);
         for (let task of tasks) {
-            const taskCard = document.createElement("div");
+            const card = document.createElement("div");
             const name = document.createElement("p");
             const description = document.createElement("p");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
+            const dueDateDisplay = document.createElement("p");
 
-            taskCard.classList.add("task-card");
+            card.classList.add("task-card");
             name.classList.add("task-name");
             description.classList.add("task-description");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
+            dueDateDisplay.classList.add("due-date");
 
             name.textContent = task.name;
             description.textContent = task.description;
-            taskCard.id = task.id;
-            taskCard.append(name, description, editBtn, deleteBtn);
-            GUI.wrapper.append(taskCard);
+            card.id = task.id;
+            dueDateDisplay.textContent =
+                task.dueDate == "" ? "" : `Due: ${task.dueDate}`;
+            card.append(name, description, dueDateDisplay, editBtn, deleteBtn);
+            GUI.wrapper.append(card);
 
             editBtn.addEventListener("click", (e) => {
                 const currentTask = e.target.parentElement.id;
-                // if (!GUI.createBtn.className.includes("projTasks")) {
                 GUI.createBtn.classList.add("edit");
-                // } else {
-                // GUI.createBtn.classList.add("editProjectTask");
-                // }
                 GUI.createBtn.value = currentTask;
                 GUI.createBtnState();
                 GUI.dialog.showModal();
@@ -177,37 +179,37 @@ export default class GUI {
                 GUI.wrapper.removeChild(e.target.parentElement);
                 Storage.deleteTask(e.target.parentElement.id);
             });
+
+            GUI.cardAnimation(task);
         }
     }
 
     static renderProjects(projects) {
         GUI.screenUpdate();
         for (let project of projects) {
-            const projectCard = document.createElement("div");
+            const card = document.createElement("div");
             const name = document.createElement("p");
             const description = document.createElement("p");
             const inspectBtn = document.createElement("button");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
+            const dueDateDisplay = document.createElement("p");
 
-            projectCard.classList.add("project-card");
+            card.classList.add("project-card");
             name.classList.add("project-name");
             description.classList.add("project-description");
             inspectBtn.classList.add("inspectBtn");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
+            dueDateDisplay.classList.add("due-date");
 
             name.textContent = project.name;
             description.textContent = project.description;
-            projectCard.id = project.id;
-            projectCard.append(
-                name,
-                description,
-                inspectBtn,
-                editBtn,
-                deleteBtn
-            );
-            GUI.wrapper.append(projectCard);
+            card.id = project.id;
+            card.append(name, description, inspectBtn, editBtn, deleteBtn);
+            GUI.wrapper.append(card);
+            dueDateDisplay.textContent =
+                task.dueDate == "" ? "" : `Due: ${task.dueDate}`;
 
             inspectBtn.addEventListener("click", (e) => {
                 GUI.createBtn.classList.add("projTasks");
@@ -232,6 +234,8 @@ export default class GUI {
                 GUI.wrapper.removeChild(e.target.parentElement);
                 Storage.deleteProject(e.target.parentElement.id);
             });
+
+            GUI.cardAnimation(project);
         }
     }
 
@@ -241,7 +245,7 @@ export default class GUI {
         const backBtn = document.createElement("button");
 
         GUI.wrapper.append(header);
-        if (GUI.createBtnState() == "editProjectTask"){
+        if (GUI.createBtnState() == "editProjectTask") {
             const currentProject = Storage.getTask(
                 GUI.createBtn.value
             ).project_id;
@@ -276,7 +280,7 @@ export default class GUI {
         })[0].id;
         const dueDate = document.querySelector("#date").value;
 
-        obj.dueDate = dueDate;
+        obj.dueDate = dueDate == "" ? "" : format(dueDate, "dd/MM/yyyy");
         obj.name = name;
         obj.description = description;
         obj.priority = priority;
@@ -297,6 +301,26 @@ export default class GUI {
             GUI.projectBtn.className.includes("active") === true
                 ? GUI.projectBtn.classList.remove("active")
                 : GUI.projectBtn.classList.add("active");
+        }
+    }
+
+    static cardAnimation(obj) {
+        if (Object.getPrototypeOf(obj) === task.prototype) {
+            const card = document.querySelector(".task-card");
+            if (obj.animation == false) {
+                card.classList.add("animation");
+                obj.animation = true;
+            } else {
+                card.classList.remove("animation");
+            }
+        } else {
+            const card = document.querySelector(".project-card");
+            if (obj.animation == false) {
+                card.classList.add("animation");
+                obj.animation = true;
+            } else {
+                card.classList.remove("animation");
+            }
         }
     }
 
