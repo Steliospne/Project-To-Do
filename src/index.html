@@ -22,38 +22,34 @@
 
         <dialog>
             <form action="" method="dialog">
-                <div>
-                    <label for="name">Name:</label>
+                <div class="form-wrapper">
+                    <label class="name" for="name">Name:</label>
                     <input type="text" name="name" id="name" />
-                </div>
-                <div>
-                    <label for="description">Description:</label>
+                    <label class="description" for="description">Description:</label>
                     <textarea name="description" id="description" cols="30" rows="10"></textarea>
-                </div>
-                <div>
-                    <label for="date">Date:</label>
+                    <label class="date" for="date">Date:</label>
                     <input type="date" name="date" id="date" />
-                </div>
-                <div>
-                    <label for="priority">Priority:</label>
-                    <div id="priority">
-                        <div>
-                            <label for="low">Low:</label>
-                            <input type="radio" name="priority" id="low" checked>
-                        </div>
-                        <div>
-                            <label for="medium">Medium:</label>
-                            <input type="radio" name="priority" id="medium">
-                        </div>
-                        <div>
-                            <label for="high">High:</label>
-                            <input type="radio" name="priority" id="high">
+                    <div class="priority">
+                        <label for="priority">Priority:</label>
+                        <div id="priority">
+                            <div>
+                                <label for="low">Low:</label>
+                                <input type="radio" name="priority" id="low" checked>
+                            </div>
+                            <div>
+                                <label for="medium">Medium:</label>
+                                <input type="radio" name="priority" id="medium">
+                            </div>
+                            <div>
+                                <label for="high">High:</label>
+                                <input type="radio" name="priority" id="high">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-btn">
-                    <button class="submit"></button>
-                    <button type="button" class="cancel">{placeholder}</button>
+                    <div class="form-btn">
+                        <button class="submit"></button>
+                        <button type="button" class="cancel">cancel</button>
+                    </div>
                 </div>
             </form>
         </dialog>
