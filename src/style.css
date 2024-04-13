@@ -1,9 +1,18 @@
+:root {
+    --form-font-color: ;
+    --form-size: 1.2rem;
+    --dlt-form-width: max-content;
+}
+
 @font-face {
     font-family: "Overlock";
     src: url(/src/assets/fonts/Overlock-Regular.ttf);
 }
 
-* {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: "Overlock";
@@ -44,6 +53,11 @@ header {
     grid-area: display;
     display: flex;
     flex-direction: column;
+}
+
+.display > h1 {
+    color:#dc6b19;
+    text-align: center;
 }
 
 footer {
@@ -128,7 +142,7 @@ i.add-btn-icon:hover,
     background-color: #dc6b19;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     color: #fff8dc;
     font-size: 1.2rem;
     gap: 10px;
@@ -164,22 +178,54 @@ i.add-btn-icon:hover,
 
 dialog {
     position: absolute;
-    height: 350px;
-    width: 500px;
-    top: calc(50vh - 175px);
-    left: calc(50vw - 250px);
+    height: 400px;
+    width: 550px;
+    top: calc(50vh - 200px);
+    left: calc(50vw - 275px);
+    background-color: #fff8dc;
+    border: 5px solid;
+    border-color: #6c0345;
+}
+
+dialog#deleteControl {
+    height: 120px;
+    width: 400px;
+    left: calc(50vw - 200px);
+    top: calc(50vh - 60px);
+}
+
+div.delete-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.warning {
+    color: red;
 }
 
 .form-wrapper {
+    height: 100%;
+    margin: 20px;
     display: grid;
     grid-template-rows: repeat(4, auto) 1fr;
     grid-template-columns: auto 1fr;
-    grid-template-areas: 
-    "name nameInput" 
-    "description ." 
-    "date ." 
-    "priority priority"
-    "buttons buttons";
+    grid-template-areas:
+        "name nameInput"
+        "description ."
+        "date ."
+        "priority priority"
+        "buttons buttons";
+    gap: 4px;
+    overflow: hidden;
 }
 
 label.name {
@@ -194,6 +240,10 @@ label.description {
     grid-area: description;
 }
 
+textarea#description {
+    resize: none;
+}
+
 label.date {
     grid-area: date;
 }
@@ -204,11 +254,97 @@ div.priority {
 
 div.form-btn {
     grid-area: buttons;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
 }
 
 div#priority {
     display: flex;
+    justify-content: space-evenly;
+    font-weight: bold;
 }
+
+div#priority > div > label {
+    display: grid;
+    font-size: var(--form-size);
+    grid-template-columns: var(--form-size) auto;
+    gap: calc(var(--form-size) / 2);
+}
+
+input[type="radio"] {
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    height: var(--form-size);
+    width: var(--form-size);
+    border: calc(var(--form-size) * 0.15) solid black;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+    transform: translateY(calc((var(--form-size) * 0.15) / 2));
+}
+
+input[type="radio"]::before {
+    content: "";
+    height: calc(var(--form-size) / 2);
+    width: calc(var(--form-size) / 2);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset var(--form-size) var(--form-size) #6c0345;
+    background-color: CanvasText; /*  forced-colors */
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="radio"]:focus {
+    outline: max(2px, calc(var(--form-size) * 0.15)) solid #6c0345;
+    outline-offset: max(2px, calc(var(--form-size) * 0.15));
+}
+
+div#priority > div > label:focus-within {
+    color: #6c0345;
+}
+
+div.form-btn > button {
+    padding: 15px;
+    border: none;
+    background-color: unset;
+    font-size: 1.3rem;
+}
+
+button.submit:focus,
+button.submit:hover {
+    animation: breath 2s ease-in-out infinite;
+}
+
+button.cancel:focus,
+button.cancel:hover {
+    color: red;
+    font-weight: 700;
+    animation: breath 2s ease-in-out infinite;
+}
+
+label.name,
+label.description,
+label.date,
+div.priority > label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #6c0345;
+}
+
+input#name,
+textarea#description,
+input#date {
+    font-size: 1rem;
+    border: #6c0345 solid 2px;
+    padding: 2.5px 5px;
+}
+
 
 @keyframes slidein {
     0% {
@@ -216,5 +352,17 @@ div#priority {
     }
     100% {
         left: 0;
+    }
+}
+
+@keyframes breath {
+    0% {
+        scale: 1;
+    }
+    50% {
+        scale: 1.2;
+    }
+    100% {
+        scale: 1;
     }
 }
