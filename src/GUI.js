@@ -2,7 +2,6 @@ import task from "./tasks.js";
 import project from "./projects.js";
 import Storage from "./Storage.js";
 import { format } from "date-fns";
-import Tasks from "./tasks.js";
 
 export default class GUI {
     static wrapper = document.querySelector(".display");
@@ -12,6 +11,7 @@ export default class GUI {
         .setAttribute("min", GUI.today);
 
     static dialog = document.querySelector("dialog");
+    static deleteControl = document.querySelector("#deleteControl");
     static homeBtn = document.querySelector(".home-btn");
     static projectBtn = document.querySelector(".project-btn");
     static addBtn = document.querySelector(".add-btn");
@@ -189,7 +189,7 @@ export default class GUI {
         for (let project of projects) {
             const card = document.createElement("div");
             const name = document.createElement("p");
-            const description = document.createElement("p");
+            const priority = document.createElement("p");
             const inspectBtn = document.createElement("button");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
@@ -197,19 +197,26 @@ export default class GUI {
 
             card.classList.add("project-card");
             name.classList.add("project-name");
-            description.classList.add("project-description");
+            priority.classList.add("project-priority");
             inspectBtn.classList.add("inspectBtn");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
             dueDateDisplay.classList.add("due-date");
 
             name.textContent = project.name;
-            description.textContent = project.description;
+            priority.textContent = `Priority: ${project.priority}`;
             card.id = project.id;
-            card.append(name, description, inspectBtn, editBtn, deleteBtn);
+            card.append(
+                name,
+                priority,
+                dueDateDisplay,
+                inspectBtn,
+                editBtn,
+                deleteBtn
+            );
             GUI.wrapper.append(card);
             dueDateDisplay.textContent =
-                task.dueDate == "" ? "" : `Due: ${task.dueDate}`;
+                project.dueDate == "" ? "" : `Due: ${project.dueDate}`;
 
             inspectBtn.addEventListener("click", (e) => {
                 GUI.createBtn.classList.add("projTasks");
@@ -225,14 +232,33 @@ export default class GUI {
             });
 
             deleteBtn.addEventListener("click", (e) => {
-                const projTasks = Storage.getTasks().filter(
-                    (task) => task.project_id == project.id
-                );
-                for (let task of projTasks) {
-                    Storage.deleteTask(task.id);
+                const submitDelete = document.querySelector(".submit-dlt");
+                const cancelDelete = document.querySelector(".cancel-dlt");
+                const target = e.target.parentElement;
+                GUI.deleteControl.showModal();
+                console.log(target);
+
+                submitDelete.addEventListener("click", () => {
+                    deleteCheckHandler(target);
+                });
+
+                cancelDelete.addEventListener("click", () => {
+                    GUI.deleteControl.close();
+                });
+
+                function deleteCheckHandler(target) {
+                    e.preventDefault();
+                    const projTasks = Storage.getTasks().filter(
+                        (task) => task.project_id == project.id
+                    );
+                    for (let task of projTasks) {
+                        Storage.deleteTask(task.id);
+                    }
+                    target.remove();
+                    Storage.deleteProject(target.id);
+                    GUI.deleteControl.close();
+                    console.log(target);
                 }
-                GUI.wrapper.removeChild(e.target.parentElement);
-                Storage.deleteProject(e.target.parentElement.id);
             });
 
             GUI.cardAnimation(project);
@@ -306,7 +332,11 @@ export default class GUI {
 
     static cardAnimation(obj) {
         if (Object.getPrototypeOf(obj) === task.prototype) {
-            const card = document.querySelector(".task-card");
+            const card = Array.from(
+                document.querySelectorAll(".task-card")
+            ).filter((card) => {
+                return card.id == obj.id;
+            })[0];
             if (obj.animation == false) {
                 card.classList.add("animation");
                 obj.animation = true;
@@ -314,7 +344,11 @@ export default class GUI {
                 card.classList.remove("animation");
             }
         } else {
-            const card = document.querySelector(".project-card");
+            const card = Array.from(
+                document.querySelectorAll(".project-card")
+            ).filter((card) => {
+                return card.id == obj.id;
+            })[0];
             if (obj.animation == false) {
                 card.classList.add("animation");
                 obj.animation = true;
