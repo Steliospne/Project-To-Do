@@ -4,6 +4,8 @@ import Storage from "./Storage.js";
 import { format } from "date-fns";
 
 export default class GUI {
+    static header = document.querySelector("header");
+    static footer = document.querySelector("footer");
     static wrapper = document.querySelector(".display");
     static today = new Date().toISOString().split("T")[0];
     static datePicker = document
@@ -55,6 +57,11 @@ export default class GUI {
         });
 
         GUI.createBtn.addEventListener("click", GUI.handleCreateButton);
+
+        GUI.renderTasks(Storage.getTasks());
+
+        GUI.footerUpdater();
+
     }
 
     static handleCreateButton(e) {
@@ -92,8 +99,6 @@ export default class GUI {
             GUI.inspectView(Storage.getTasks());
         }
         GUI.dialog.close();
-
-        // console.log(GUI.data);
     }
 
     static createBtnState() {
@@ -143,10 +148,11 @@ export default class GUI {
             GUI.screenUpdate();
         }
 
-        console.log(tasks);
         for (let task of tasks) {
             const card = document.createElement("div");
             const name = document.createElement("p");
+            const completedButton = document.createElement("input");
+            const priority = document.createElement("p");
             const description = document.createElement("p");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
@@ -154,18 +160,70 @@ export default class GUI {
 
             card.classList.add("task-card");
             name.classList.add("task-name");
+            completedButton.classList.add(`check-btn${task.id}`);
             description.classList.add("task-description");
+            priority.classList.add("task-priority");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
             dueDateDisplay.classList.add("due-date");
 
             name.textContent = task.name;
+            completedButton.type = "checkbox";
+            priority.innerHTML = `Priority: <span class="priorityDisplay${
+                task.id
+            }">${task.priority.toUpperCase()}</span>`;
             description.textContent = task.description;
             card.id = task.id;
             dueDateDisplay.textContent =
                 task.dueDate == "" ? "" : `Due: ${task.dueDate}`;
-            card.append(name, description, dueDateDisplay, editBtn, deleteBtn);
+            card.append(
+                completedButton,
+                name,
+                description,
+                priority,
+                dueDateDisplay,
+                editBtn,
+                deleteBtn
+            );
             GUI.wrapper.append(card);
+
+            const priorityDisplay = document.querySelector(
+                `.priorityDisplay${task.id}`
+            );
+            priorityDisplay.style.fontWeight = "bold";
+            if (task.priority == "low") {
+                priorityDisplay.style.color = "green";
+            } else if (task.priority == "medium") {
+                priorityDisplay.style.color = "#f7c566";
+            } else {
+                priorityDisplay.style.color = "#6c0345";
+            }
+
+            completedButton.addEventListener("change", (e) => {
+                const card = document.getElementById(
+                    `${e.target.parentElement.id}`
+                );
+                if (e.target.checked) {
+                    task.completed = true;
+
+                    for (let node of card.children) {
+                        if (node.className == "editBtn")
+                            node.setAttribute("disabled", "");
+                        
+                            node.innerHTML = "<s>" + node.innerHTML + "</s>";
+                    }
+                } else {
+
+                    task.completed = false;
+
+                    for (let node of card.children) {
+                        if (node.className == "editBtn")
+                            node.removeAttribute("disabled");
+
+                        node.innerHTML = node.innerHTML.slice(3, -4);
+                    }
+                }
+            });
 
             editBtn.addEventListener("click", (e) => {
                 const currentTask = e.target.parentElement.id;
@@ -178,9 +236,16 @@ export default class GUI {
             deleteBtn.addEventListener("click", (e) => {
                 GUI.wrapper.removeChild(e.target.parentElement);
                 Storage.deleteTask(e.target.parentElement.id);
+                if(Storage.storageAvailable("localStorage")) {
+                    localStorage.setItem("Tasks", JSON.stringify(Storage.getTasks()));
+                }
             });
 
             GUI.cardAnimation(task);
+
+            if(Storage.storageAvailable("localStorage")) {
+                localStorage.setItem("Tasks", JSON.stringify(Storage.getTasks()));
+            }
         }
     }
 
@@ -204,8 +269,12 @@ export default class GUI {
             dueDateDisplay.classList.add("due-date");
 
             name.textContent = project.name;
-            priority.textContent = `Priority: ${project.priority}`;
+            priority.innerHTML = `Priority: <span class="priorityDisplay${
+                project.id
+            }">${project.priority.toUpperCase()}</span>`;
             card.id = project.id;
+            dueDateDisplay.textContent =
+                project.dueDate == "" ? "" : `Due: ${project.dueDate}`;
             card.append(
                 name,
                 priority,
@@ -215,8 +284,18 @@ export default class GUI {
                 deleteBtn
             );
             GUI.wrapper.append(card);
-            dueDateDisplay.textContent =
-                project.dueDate == "" ? "" : `Due: ${project.dueDate}`;
+
+            const priorityDisplay = document.querySelector(
+                `.priorityDisplay${project.id}`
+            );
+            priorityDisplay.style.fontWeight = "bold";
+            if (project.priority == "low") {
+                priorityDisplay.style.color = "green";
+            } else if (project.priority == "medium") {
+                priorityDisplay.style.color = "#f7c566";
+            } else {
+                priorityDisplay.style.color = "#6c0345";
+            }
 
             inspectBtn.addEventListener("click", (e) => {
                 GUI.createBtn.classList.add("projTasks");
@@ -236,7 +315,6 @@ export default class GUI {
                 const cancelDelete = document.querySelector(".cancel-dlt");
                 const target = e.target.parentElement;
                 GUI.deleteControl.showModal();
-                console.log(target);
 
                 submitDelete.addEventListener("click", () => {
                     deleteCheckHandler(target);
@@ -257,9 +335,15 @@ export default class GUI {
                     target.remove();
                     Storage.deleteProject(target.id);
                     GUI.deleteControl.close();
-                    console.log(target);
+                    
+                    if(Storage.storageAvailable("localStorage")) {
+                        localStorage.setItem("Projects", JSON.stringify(Storage.getProjects()));
+                    }
                 }
             });
+            if(Storage.storageAvailable("localStorage")) {
+                localStorage.setItem("Projects", JSON.stringify(Storage.getProjects()));
+            }
 
             GUI.cardAnimation(project);
         }
@@ -267,28 +351,31 @@ export default class GUI {
 
     static inspectView(tasks) {
         GUI.screenUpdate();
-        const header = document.createElement("h1");
+        const projectTitle = document.createElement("h1");
         const backBtn = document.createElement("button");
 
-        GUI.wrapper.append(header);
+        GUI.wrapper.append(projectTitle);
         if (GUI.createBtnState() == "editProjectTask") {
             const currentProject = Storage.getTask(
                 GUI.createBtn.value
             ).project_id;
-            header.textContent = Storage.getProject(currentProject).name;
+            projectTitle.textContent = Storage.getProject(currentProject).name;
             GUI.renderTasks(
                 tasks.filter((task) => task.project_id == currentProject)
             );
         } else {
-            header.textContent = Storage.getProject(GUI.createBtn.value).name;
+            projectTitle.textContent = Storage.getProject(
+                GUI.createBtn.value
+            ).name;
             GUI.renderTasks(
                 tasks.filter((task) => task.project_id == GUI.createBtn.value)
             );
         }
 
-        backBtn.textContent = "Back";
+        backBtn.value = "Back";
+        backBtn.className = "back-btn";
         GUI.createBtn.classList.add("projTasks");
-        GUI.wrapper.append(backBtn);
+        GUI.header.prepend(backBtn);
 
         backBtn.addEventListener("click", () => {
             GUI.createBtnStateReset();
@@ -360,5 +447,11 @@ export default class GUI {
 
     static screenUpdate() {
         GUI.wrapper.textContent = "";
+        if (GUI.header.firstChild.value == "Back")
+            GUI.header.firstChild.remove();
+    }
+
+    static footerUpdater() {
+        GUI.footer.innerHTML = `Created by <a href="https://github.com/Steliospne"><i class='github-logo'></i> Steliospne </a> © ${new Date().getFullYear()}`;
     }
 }
