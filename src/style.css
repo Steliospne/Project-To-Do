@@ -1,5 +1,4 @@
 :root {
-    --form-font-color: ;
     --form-size: 1.2rem;
     --dlt-form-width: max-content;
 }
@@ -38,6 +37,7 @@ header {
     grid-area: header;
     display: flex;
     background: #f7c566;
+    align-items: center;
 }
 
 .nav-bar {
@@ -56,7 +56,7 @@ header {
 }
 
 .display > h1 {
-    color:#dc6b19;
+    color: #dc6b19;
     text-align: center;
 }
 
@@ -69,12 +69,48 @@ footer {
     align-items: center;
 }
 
+footer > a {
+    margin: 0 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    background: unset;
+    border: none;
+    color: black;
+}
+
+.github-logo {
+    width: 25px;
+    height: 25px;
+    background-image: url("./assets/images/logo-github.svg");
+    background-repeat: no-repeat;
+}
+
+footer > a:hover > i {
+    animation: spinLogo 900ms forwards ease-in-out;
+}
+
+a:visited {
+    color: #dc6b19;
+}
+
 .logo {
     flex: 1;
 }
 
+.add-btn {
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    border: none;
+    background: unset;
+}
+
 i.add-btn-icon {
     background-image: url("./assets/images/plus-circle.svg");
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
 }
 
 i.home-btn-icon {
@@ -91,7 +127,6 @@ i.project-btn-icon {
 .inspectBtn,
 .editBtn,
 .deleteBtn,
-i.add-btn-icon,
 i.home-btn-icon,
 i.project-btn-icon {
     width: 24px;
@@ -101,6 +136,7 @@ i.project-btn-icon {
         brightness(107%) contrast(105%);
 }
 
+.back-btn:hover,
 .inspectBtn:hover,
 .editBtn:hover,
 .deleteBtn:hover,
@@ -111,7 +147,6 @@ i.add-btn-icon:hover,
         brightness(65%) contrast(99%);
 }
 
-.add-btn,
 .home-btn,
 .project-btn {
     margin: 10px 0;
@@ -125,8 +160,9 @@ i.add-btn-icon:hover,
     font-weight: 700;
 }
 
-.add-btn {
-    align-items: center;
+.back-btn {
+    background-image: url("./assets/images/return-up-back-outline.svg");
+    margin-left: 10px;
 }
 
 .home-btn.active,
@@ -142,10 +178,14 @@ i.add-btn-icon:hover,
     background-color: #dc6b19;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     color: #fff8dc;
     font-size: 1.2rem;
     gap: 10px;
+}
+
+.project-card {
+    grid-template-columns: 1fr auto;
 }
 
 .task-card.animation,
@@ -166,6 +206,7 @@ i.add-btn-icon:hover,
     background-image: url("./assets/images/trash-2.svg");
 }
 
+.back-btn,
 .inspectBtn,
 .deleteBtn,
 .editBtn {
@@ -345,6 +386,17 @@ input#date {
     padding: 2.5px 5px;
 }
 
+@keyframes spinLogo {
+    0% {
+        transform: rotate(0deg);
+        scale: 1;
+    }
+    100% {
+        transform: rotate(360deg);
+        scale: 1.2;
+        margin: 0 5px;
+    }
+}
 
 @keyframes slidein {
     0% {
