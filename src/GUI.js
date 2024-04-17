@@ -153,7 +153,7 @@ export default class GUI {
             const name = document.createElement("p");
             const completedButton = document.createElement("input");
             const priority = document.createElement("p");
-            const description = document.createElement("p");
+            const description = document.createElement("button");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
             const dueDateDisplay = document.createElement("p");
@@ -161,7 +161,7 @@ export default class GUI {
             card.classList.add("task-card");
             name.classList.add("task-name");
             completedButton.classList.add(`check-btn${task.id}`);
-            description.classList.add("task-description");
+            description.classList.add("description-btn");
             priority.classList.add("task-priority");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
@@ -172,16 +172,15 @@ export default class GUI {
             priority.innerHTML = `Priority: <span class="priorityDisplay${
                 task.id
             }">${task.priority.toUpperCase()}</span>`;
-            description.textContent = task.description;
             card.id = task.id;
             dueDateDisplay.textContent =
-                task.dueDate == "" ? "" : `Due: ${task.dueDate}`;
+                task.dueDate == "" ? "Due: - " : `Due: ${task.dueDate}`;
             card.append(
                 completedButton,
                 name,
-                description,
                 priority,
                 dueDateDisplay,
+                description,
                 editBtn,
                 deleteBtn
             );
@@ -225,6 +224,27 @@ export default class GUI {
                 }
             });
 
+            description.addEventListener("click", () => {
+                const dialog = document.querySelector("dialog#description")
+                const wrapper = document.createElement("div")
+                const descriptionDisplay = document.createElement("p")
+                const backBtn = document.createElement("button")
+                const descriptionHeader = document.createElement("h1")
+                backBtn.className = "back-btn";
+                descriptionDisplay.textContent = task.description;
+                descriptionHeader.textContent = "Description";
+                wrapper.append(
+                    descriptionHeader,
+                    descriptionDisplay,
+                    backBtn)
+                dialog.append(wrapper)
+                dialog.show()
+                backBtn.addEventListener('click', () => {
+                    dialog.close();
+                    dialog.textContent = "";
+                })
+            })
+
             editBtn.addEventListener("click", (e) => {
                 const currentTask = e.target.parentElement.id;
                 GUI.createBtn.classList.add("edit");
@@ -256,6 +276,7 @@ export default class GUI {
             const name = document.createElement("p");
             const priority = document.createElement("p");
             const inspectBtn = document.createElement("button");
+            const description = document.createElement("button");
             const deleteBtn = document.createElement("button");
             const editBtn = document.createElement("button");
             const dueDateDisplay = document.createElement("p");
@@ -264,6 +285,7 @@ export default class GUI {
             name.classList.add("project-name");
             priority.classList.add("project-priority");
             inspectBtn.classList.add("inspectBtn");
+            description.classList.add("description-btn");
             deleteBtn.classList.add("deleteBtn");
             editBtn.classList.add("editBtn");
             dueDateDisplay.classList.add("due-date");
@@ -280,6 +302,7 @@ export default class GUI {
                 priority,
                 dueDateDisplay,
                 inspectBtn,
+                description,
                 editBtn,
                 deleteBtn
             );
@@ -302,6 +325,27 @@ export default class GUI {
                 GUI.createBtn.value = e.target.parentElement.id;
                 GUI.inspectView(Storage.getTasks());
             });
+
+            description.addEventListener("click", () => {
+                const dialog = document.querySelector("dialog#description")
+                const wrapper = document.createElement("div")
+                const descriptionDisplay = document.createElement("p")
+                const backBtn = document.createElement("button")
+                const descriptionHeader = document.createElement("h1")
+                backBtn.className = "back-btn";
+                descriptionDisplay.textContent = project.description;
+                descriptionHeader.textContent = "Description";
+                wrapper.append(
+                    descriptionHeader,
+                    descriptionDisplay,
+                    backBtn)
+                dialog.append(wrapper)
+                dialog.show()
+                backBtn.addEventListener('click', () => {
+                    dialog.close();
+                    dialog.textContent = "";
+                })
+            })
 
             editBtn.addEventListener("click", (e) => {
                 GUI.createBtn.classList.add("edit");
