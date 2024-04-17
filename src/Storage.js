@@ -82,10 +82,10 @@ export default class Storage {
 
       static loadFromStorage() {
         if(Storage.storageAvailable("localStorage")) {
-            const temp_tasks = JSON.parse(localStorage.getItem("Tasks"))
-            const temp_projects = JSON.parse(localStorage.getItem("Projects"))
-            const taskCounterStorage = JSON.parse(localStorage.getItem("taskCounter"))
-            const projectCounterStorage = JSON.parse(localStorage.getItem("projectCounter"))
+            const temp_tasks = JSON.parse(localStorage.getItem("Tasks")) == null ? [] : JSON.parse(localStorage.getItem("Tasks"))
+            const temp_projects = JSON.parse(localStorage.getItem("Projects")) == null ? [] : JSON.parse(localStorage.getItem("Projects"))
+            const taskCounterStorage = JSON.parse(localStorage.getItem("taskCounter")) == null ? 0 : JSON.parse(localStorage.getItem("taskCounter"))
+            const projectCounterStorage = JSON.parse(localStorage.getItem("projectCounter")) == null ? 0 : JSON.parse(localStorage.getItem("projectCounter"))
 
             for (let task of temp_tasks) {
                 Object.setPrototypeOf(task, Tasks.prototype)
