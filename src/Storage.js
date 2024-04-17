@@ -11,12 +11,18 @@ export default class Storage {
         Storage.tasks.push(task);
         task.id = Storage.taskCounter
         Storage.taskCounter++;
+        if(Storage.storageAvailable("localStorage")) {
+          localStorage.setItem("taskCounter", JSON.stringify(Storage.taskCounter));
+        }
     }
 
     static addProject(project) {
         Storage.projects.push(project);
         project.id = Storage.projectCounter
         Storage.projectCounter++;
+        if(Storage.storageAvailable("localStorage")) {
+          localStorage.setItem("projectCounter", JSON.stringify(Storage.projectCounter));
+        }
     }
 
     static getTasks() {
@@ -78,6 +84,9 @@ export default class Storage {
         if(Storage.storageAvailable("localStorage")) {
             const temp_tasks = JSON.parse(localStorage.getItem("Tasks"))
             const temp_projects = JSON.parse(localStorage.getItem("Projects"))
+            const taskCounterStorage = JSON.parse(localStorage.getItem("taskCounter"))
+            const projectCounterStorage = JSON.parse(localStorage.getItem("projectCounter"))
+
             for (let task of temp_tasks) {
                 Object.setPrototypeOf(task, Tasks.prototype)
                 Storage.tasks.push(task)
@@ -85,6 +94,18 @@ export default class Storage {
             for (let project of temp_projects) {
                 Object.setPrototypeOf(project, Projects.prototype)
                 Storage.projects.push(project)
+            }
+
+            if(temp_tasks.length == 0) {
+              localStorage.setItem("taskCounter", "0") 
+            } else {
+              Storage.taskCounter = +taskCounterStorage
+            }
+
+            if(temp_projects.length == 0) {
+              localStorage.setItem("projectCounter", "0")
+            } else {
+              Storage.projectCounter = +projectCounterStorage
             }
         }
       }
