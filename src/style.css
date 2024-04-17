@@ -124,6 +124,7 @@ i.project-btn-icon {
     margin-right: 5px;
 }
 
+.description-btn,
 .inspectBtn,
 .editBtn,
 .deleteBtn,
@@ -136,6 +137,7 @@ i.project-btn-icon {
         brightness(107%) contrast(105%);
 }
 
+.description-btn:hover,
 .back-btn:hover,
 .inspectBtn:hover,
 .editBtn:hover,
@@ -194,6 +196,10 @@ i.add-btn-icon:hover,
     animation: slidein 1s ease-in-out;
 }
 
+.description-btn {
+    background-image: url("./assets/images/more-vertical.svg");
+}
+
 .inspectBtn {
     background-image: url("./assets/images/eye.svg");
 }
@@ -206,6 +212,7 @@ i.add-btn-icon:hover,
     background-image: url("./assets/images/trash-2.svg");
 }
 
+.description-btn,
 .back-btn,
 .inspectBtn,
 .deleteBtn,
@@ -226,6 +233,28 @@ dialog {
     background-color: #fff8dc;
     border: 5px solid;
     border-color: #6c0345;
+}
+
+dialog#description {
+}
+
+dialog#description > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+}
+
+dialog#description > div > p {
+    flex: 1;
+    align-self: flex-start;
+}
+
+dialog#description > div > * {
+    color: #6c0345;
+    margin: 20px;
 }
 
 dialog#deleteControl {
