@@ -7,11 +7,6 @@ export default class GUI {
     static header = document.querySelector("header");
     static footer = document.querySelector("footer");
     static wrapper = document.querySelector(".display");
-    static today = new Date().toISOString().split("T")[0];
-    static datePicker = document
-        .querySelector("#date")
-        .setAttribute("min", GUI.today);
-
     static dialog = document.querySelector("dialog");
     static deleteControl = document.querySelector("#deleteControl");
     static homeBtn = document.querySelector(".home-btn");
@@ -57,11 +52,9 @@ export default class GUI {
         });
 
         GUI.createBtn.addEventListener("click", GUI.handleCreateButton);
-
+        GUI.setFormAttribute();
         GUI.renderTasks(Storage.getTasks());
-
         GUI.footerUpdater();
-
     }
 
     static handleCreateButton(e) {
@@ -208,11 +201,10 @@ export default class GUI {
                     for (let node of card.children) {
                         if (node.className == "editBtn")
                             node.setAttribute("disabled", "");
-                        
-                            node.innerHTML = "<s>" + node.innerHTML + "</s>";
+
+                        node.innerHTML = "<s>" + node.innerHTML + "</s>";
                     }
                 } else {
-
                     task.completed = false;
 
                     for (let node of card.children) {
@@ -225,25 +217,22 @@ export default class GUI {
             });
 
             description.addEventListener("click", () => {
-                const dialog = document.querySelector("dialog#description")
-                const wrapper = document.createElement("div")
-                const descriptionDisplay = document.createElement("p")
-                const backBtn = document.createElement("button")
-                const descriptionHeader = document.createElement("h1")
+                const dialog = document.querySelector("dialog#description");
+                const wrapper = document.createElement("div");
+                const descriptionDisplay = document.createElement("p");
+                const backBtn = document.createElement("button");
+                const descriptionHeader = document.createElement("h1");
                 backBtn.className = "back-btn";
                 descriptionDisplay.textContent = task.description;
                 descriptionHeader.textContent = "Description";
-                wrapper.append(
-                    descriptionHeader,
-                    descriptionDisplay,
-                    backBtn)
-                dialog.append(wrapper)
-                dialog.show()
-                backBtn.addEventListener('click', () => {
+                wrapper.append(descriptionHeader, descriptionDisplay, backBtn);
+                dialog.append(wrapper);
+                dialog.show();
+                backBtn.addEventListener("click", () => {
                     dialog.close();
                     dialog.textContent = "";
-                })
-            })
+                });
+            });
 
             editBtn.addEventListener("click", (e) => {
                 const currentTask = e.target.parentElement.id;
@@ -256,15 +245,21 @@ export default class GUI {
             deleteBtn.addEventListener("click", (e) => {
                 GUI.wrapper.removeChild(e.target.parentElement);
                 Storage.deleteTask(e.target.parentElement.id);
-                if(Storage.storageAvailable("localStorage")) {
-                    localStorage.setItem("Tasks", JSON.stringify(Storage.getTasks()));
+                if (Storage.storageAvailable("localStorage")) {
+                    localStorage.setItem(
+                        "Tasks",
+                        JSON.stringify(Storage.getTasks())
+                    );
                 }
             });
 
             GUI.cardAnimation(task);
 
-            if(Storage.storageAvailable("localStorage")) {
-                localStorage.setItem("Tasks", JSON.stringify(Storage.getTasks()));
+            if (Storage.storageAvailable("localStorage")) {
+                localStorage.setItem(
+                    "Tasks",
+                    JSON.stringify(Storage.getTasks())
+                );
             }
         }
     }
@@ -327,25 +322,22 @@ export default class GUI {
             });
 
             description.addEventListener("click", () => {
-                const dialog = document.querySelector("dialog#description")
-                const wrapper = document.createElement("div")
-                const descriptionDisplay = document.createElement("p")
-                const backBtn = document.createElement("button")
-                const descriptionHeader = document.createElement("h1")
+                const dialog = document.querySelector("dialog#description");
+                const wrapper = document.createElement("div");
+                const descriptionDisplay = document.createElement("p");
+                const backBtn = document.createElement("button");
+                const descriptionHeader = document.createElement("h1");
                 backBtn.className = "back-btn";
                 descriptionDisplay.textContent = project.description;
                 descriptionHeader.textContent = "Description";
-                wrapper.append(
-                    descriptionHeader,
-                    descriptionDisplay,
-                    backBtn)
-                dialog.append(wrapper)
-                dialog.show()
-                backBtn.addEventListener('click', () => {
+                wrapper.append(descriptionHeader, descriptionDisplay, backBtn);
+                dialog.append(wrapper);
+                dialog.show();
+                backBtn.addEventListener("click", () => {
                     dialog.close();
                     dialog.textContent = "";
-                })
-            })
+                });
+            });
 
             editBtn.addEventListener("click", (e) => {
                 GUI.createBtn.classList.add("edit");
@@ -379,14 +371,20 @@ export default class GUI {
                     target.remove();
                     Storage.deleteProject(target.id);
                     GUI.deleteControl.close();
-                    
-                    if(Storage.storageAvailable("localStorage")) {
-                        localStorage.setItem("Projects", JSON.stringify(Storage.getProjects()));
+
+                    if (Storage.storageAvailable("localStorage")) {
+                        localStorage.setItem(
+                            "Projects",
+                            JSON.stringify(Storage.getProjects())
+                        );
                     }
                 }
             });
-            if(Storage.storageAvailable("localStorage")) {
-                localStorage.setItem("Projects", JSON.stringify(Storage.getProjects()));
+            if (Storage.storageAvailable("localStorage")) {
+                localStorage.setItem(
+                    "Projects",
+                    JSON.stringify(Storage.getProjects())
+                );
             }
 
             GUI.cardAnimation(project);
@@ -447,6 +445,16 @@ export default class GUI {
         }
 
         return obj;
+    }
+
+    static setFormAttribute() {
+        const name = document.querySelector("input#name");
+        const description = document.querySelector("textarea#description");
+        const date = document.querySelector("input#date");
+        const today = new Date().toISOString().split("T")[0];
+        name.setAttribute("maxlength", "20");
+        description.setAttribute("maxlength", "200");
+        date.setAttribute("min", today);
     }
 
     static navBarButtonState(e) {
